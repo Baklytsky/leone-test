@@ -1,0 +1,250 @@
+/*================ Helper Classes ================*/
+.clearfix {
+  @include clearfix();
+}
+
+.visually-hidden {
+  @include visually-hidden();
+}
+
+.js-focus-hidden:focus {
+  outline: none;
+}
+
+.label-hidden {
+  @include visually-hidden();
+
+  // No placeholders, so force show labels
+  .no-placeholder & {
+    @include visually-shown();
+  }
+}
+
+.visually-shown {
+  @include visually-shown();
+}
+
+// Only show when JS is not supported
+.no-js:not(html) {
+  display: none;
+
+  .no-js & {
+    display: block;
+  }
+}
+
+// Only show when JS is supported
+.js {
+  .no-js & {
+    display: none;
+  }
+}
+
+// Only show when browser cookies are not supported
+.supports-no-cookies:not(html) {
+  display: none;
+
+  html.supports-no-cookies & {
+    display: block;
+  }
+}
+
+// Only show when browser cookies are supported
+.supports-cookies {
+  html.supports-no-cookies & {
+    display: none;
+  }
+}
+
+/*============================================================================
+  Skip to content button
+    - Overrides .visually-hidden when focused
+==============================================================================*/
+.skip-link:focus {
+  @include visually-shown(absolute);
+  color: $color-body-text;
+  background-color: $color-body;
+  padding: $gutter / 2;
+  z-index: $z-index-skip-to-content;
+  transition: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+.sr-only-focusable:focus {
+  position: relative;
+  width: auto;
+  height: auto;
+  clip: initial;
+  margin: inherit;
+  padding: inherit;
+  border: initial;
+}
+
+.display--none {
+  display: none;
+}
+
+.small--hide {
+  @include media-query($small) {
+    display: none !important;
+  }
+}
+
+.medium-up--hide {
+  @include media-query($medium-up) {
+    display: none !important;
+  }
+}
+
+.medium-down--hide {
+  @include media-query($medium-down) {
+    display: none !important;
+  }
+}
+
+.large-up--hide {
+  @include media-query($large-up) {
+    display: none !important;
+  }
+}
+
+.large-down--hide {
+  @include media-query($large-down) {
+    display: none !important;
+  }
+}
+
+.extra-large-up--hide {
+  @include media-query($extra-large-up) {
+    display: none !important;
+  }
+}
+
+.extra-large-down--hide {
+  @include media-query($extra-large-down) {
+    display: none !important;
+  }
+}
+
+.widescreen--hide {
+  @include media-query($widescreen) {
+    display: none !important;
+  }
+}
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+
+  .tab {
+    padding: 28px 20px;
+    border-top: 1px solid $color-border-secondary;
+
+    &:last-child {
+      border-bottom: 1px solid $color-border-secondary;
+    }
+
+    button {
+      font-family: $font-button;
+      font-size: 21px;
+      font-weight: $font-weight-button;
+      line-height: 1.19;
+      text-transform: unset;
+      background: none;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 0;
+
+      .icon {
+        width: 12px;
+        height: 16px;
+      }
+
+      &[aria-expanded="true"] {
+        .icon {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+
+  .tab-text {
+    padding-top: 20px;
+    color: $color-body-text;
+    font-family: $font-text;
+    font-size: 18px;
+    font-weight: $font-weight-text;
+    line-height: 1.38;
+
+    a {
+      text-decoration: underline;
+    }
+  }
+}
+
+.align-top-left {
+  align-items: flex-start;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.align-top-middle {
+  align-items: flex-start;
+  justify-content: center;
+  text-align: center;
+}
+
+.align-top-right {
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.align-center-left {
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.align-center-middle {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.align-center-right {
+  align-items: center;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.align-bottom-left {
+  align-items: flex-end;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.align-bottom-middle {
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+}
+
+.align-bottom-right {
+  align-items: flex-end;
+  justify-content: flex-end;
+  text-align: right;
+}

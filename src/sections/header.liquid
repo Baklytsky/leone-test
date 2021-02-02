@@ -1,0 +1,398 @@
+{%- assign logo_svg = section.settings.logo_svg -%}
+{%- assign logo_image = section.settings.logo_image -%}
+{%- assign logo_max_width = section.settings.logo_max_width -%}
+{%- assign logo_max_width_mobile = section.settings.logo_max_width_mobile -%}
+{%- assign mobile_menu = section.settings.mobile_linklist -%}
+{%- assign mobile_sub_menu = section.settings.sub_mobile_linklist -%}
+
+<style>
+  {% if logo_image != blank or logo_svg != blank %}
+    .site-logo__wrapper {
+      max-width: {{ logo_max_width }}px;
+    }
+  @media screen and (max-width: 767px) {
+    .site-logo__wrapper {
+      max-width: {{ logo_max_width_mobile }}px;
+    }
+  }
+  {% endif %}
+</style>
+
+<header class="header" role="banner">
+
+  {%- if mobile_menu != blank -%}
+    <button type="button" class="mobile-menu--open button--link large-up--hide global-sidebar-button" aria-expanded="false" aria-controls="{{ mobile_menu }}">
+      <span class="sr-only">Open mobile menu</span>
+      {% render 'icon' with 'burger' %}
+    </button>
+  {%- endif -%}
+
+  {% if template.name == 'index' %}
+    <h1 class="site-logo__wrapper" itemscope itemtype="http://schema.org/Organization">
+  {% else %}
+    <div class="site-logo__wrapper" itemscope itemtype="http://schema.org/Organization">
+  {% endif %}
+      <a href="/" itemprop="url" class="site-logo{% if logo_svg != blank or logo_image != blank %} site-logo__image{% endif %}">
+        {% if logo_svg != blank %}
+          {{ logo_svg }}
+
+        {% elsif logo_image != blank %}
+          {% capture image_size %}{{ logo_max_width }}x{% endcapture %}
+          <img class="lazyload"
+               data-sizes="auto"
+               data-src="{{ logo_image | img_url: image_size, scale: 2 }}"
+               data-srcset="{{ logo_image | img_url: image_size }} 1x, {{ logo_image | img_url: image_size, scale: 2 }} 2x"
+               alt="{{ logo_image.alt | default: shop.name }}"
+               itemprop="logo">
+
+        {% else %}
+          {{ shop.name }}
+        {% endif %}
+
+        <span class="sr-only">
+          {{ shop.name }}
+        </span>
+      </a>
+  {% if template.name == 'index' %}
+    </h1>
+  {% else %}
+    </div>
+  {% endif %}
+
+  <nav class="header__nav" role="navigation">
+    <ul>
+      {% for link in linklists[section.settings.main_linklist].links %}
+        {%- assign has_sidebar_menu = false -%}
+        {%- assign block_id = false -%}
+        {%- for block in section.blocks -%}
+          {%- assign title_handleize = block.settings.menu_item | handleize -%}
+          {%- assign link_handleize = link.title | handleize -%}
+
+          {%- if title_handleize == link_handleize -%}
+            {%- assign has_sidebar_menu = true -%}
+            {%- assign block_id = block.id -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        <li>
+          <a href="{{ link.url }}" class="global-sidebar-button" {% if has_sidebar_menu %} role="button" aria-controls="{{ block_id }}" {% endif %}>{{ link.title | escape }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+
+  <div class="header__right-side">
+    <a href="/search" class="header-search" id="open-search">
+      {% render 'icon' with 'search' %}
+      <span class="sr-only">search</span>
+    </a>
+
+
+    {% if customer %}
+      <a href="/account" class="header__account-link">
+        {% render 'icon' with 'account' %}
+        <span class="sr-only">{{ 'layout.customer.account' | t }}</span>
+      </a>
+    {% else %}
+      <a href="/account/login" class="header__account-link">
+        {% render 'icon' with 'account' %}
+        <span class="sr-only">{{ 'layout.customer.log_in' | t }}</span>
+      </a>
+    {% endif %}
+
+    <a href="/cart" class="header__cart" data-open-cart-drawer {% if cart.item_count > 0 %} style="display: block;"{% endif %}>
+      {% render 'icon' with 'cart' %}
+      <span class="sr-only">
+        {{ 'layout.cart.title' | t }}
+      ({{ cart.item_count }} {{ 'layout.cart.items_count' | t: count: cart.item_count }})</span>
+      <span class="header__cart__count"></span>
+    </a>
+
+  </div>
+
+  <div class="header-mobile-icons large-up--hide">
+    <a href="/search" class="header-search" id="open-search">
+      {% render 'icon' with 'search' %}
+      <span class="sr-only">search</span>
+    </a>
+
+    <a href="/cart" class="header__cart" data-open-cart-drawer {% if cart.item_count > 0 %} style="display: block;"{% endif %}>
+      {% render 'icon' with 'cart' %}
+      <span class="sr-only">{{ 'layout.cart.title' | t }}
+      ({{ cart.item_count }} {{ 'layout.cart.items_count' | t: count: cart.item_count }})</span>
+      <span class="header__cart__count"></span>
+    </a>
+  </div>
+
+{% comment %}
+
+  <a href="/cart">
+    {% include 'icon-cart' %}
+    {{ 'layout.cart.title' | t }}
+    ({{ cart.item_count }} {{ 'layout.cart.items_count' | t: count: cart.item_count }})
+  </a>
+
+  {% if shop.customer_accounts_enabled %}
+    <ul>
+      {% if customer %}
+        <li>
+          {% if customer.first_name != blank %}
+            {% capture first_name %}<a href="/account">{{ customer.first_name }}</a>{% endcapture %}
+            {{ 'layout.customer.logged_in_as_html' | t: first_name: first_name }}
+          {% else %}
+            <a href="/account">{{ 'layout.customer.account' | t }}</a>
+          {% endif %}
+        </li>
+        <li>
+          {{ 'layout.customer.log_out' | t | customer_logout_link }}
+        </li>
+      {% else %}
+        <li>
+          {{ 'layout.customer.log_in' | t | customer_login_link }}
+        </li>
+        <li>
+          {{ 'layout.customer.create_account' | t | customer_register_link }}
+        </li>
+      {% endif %}
+    </ul>
+  {% endif %}
+
+  <form action="/search" method="get" role="search">
+    <label for="Search" class="label-hidden">
+      {{ 'general.search.placeholder' | t }}
+    </label>
+    <input type="search"
+           name="q"
+           id="Search"
+           value="{{ search.terms | escape }}"
+           placeholder="{{ 'general.search.placeholder' | t }}">
+    <button type="submit" class="btn">
+      {% include 'icon-search' %}
+      <span class="icon-fallback-text">{{ 'general.search.submit' | t }}</span>
+    </button>
+  </form>
+{% endcomment %}
+
+  {%- for block in section.blocks -%}
+    {%- if block.type == 'megamenu' and block.settings.menu_item != blank and block.settings.menu_item_linklist != blank -%}
+      {%- assign item_megamenu = block.settings.menu_item_linklist -%}
+
+      {% capture content %}
+        <div class="header-item-menu">
+          {% for link in linklists[item_megamenu].links %}
+            {%- assign link_id_handleize = link.title | handleize | append: link.url | handleize -%}
+
+            {%- if link.links != blank -%}
+              <button class="header-item-menu__link ariaToggleSlide" type="button" aria-expanded="false" aria-controls="{{ link_id_handleize }}">
+                {{ link.title }}
+              {% render 'icon'  with 'dropdown' %}
+              </button>
+              <div class="header-item-menu__sublink-container" id="{{ link_id_handleize }}">
+                {% for sub_link in link.links %}
+                  <a class="header-item-menu__sublink" href="{{ sub_link.url }}">{{ sub_link.title }}</a>
+                {% endfor %}
+              </div>
+            {% else %}
+              <a class="header-item-menu__link" href="{{ link.url }}">{{ link.title }}</a>
+            {%- endif -%}
+
+          {% endfor %}
+        </div>
+      {% endcapture %}
+
+      {% render 'global-sidebar', id: block.id, left_or_right: 'left', content: content %}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if mobile_menu != blank -%}
+    {% capture mobile_menu_content %}
+      <div class="mobile-menu">
+        <div class="mobile-menu__main">
+          {% for link in linklists[mobile_menu].links %}
+
+            {%- if link.links != blank -%}
+              {%- assign mobile_link_id = link.title | handleize | append: link.url | handleize | append: link.levels -%}
+              <button class="global-sidebar-button mobile-menu__btn" type="button" aria-expanded="false" aria-controls="{{ mobile_link_id }}">
+                {{ link.title }}
+                {% render 'icon' with 'arrow-right' %}
+              </button>
+              
+              {% capture mobile_links_menu %}
+                {%- for sublink in link.links -%}
+
+                  {%- if sublink.links != blank -%}
+                    {%- assign mobile_sublink_id = sublink.title | handleize | append: sublink.url | handleize | append: sublink.levels -%}
+                    <button class="global-sidebar-button mobile-menu__submenu-btn" type="button" aria-expanded="false" aria-controls="{{ mobile_sublink_id }}">
+                      {{ sublink.title }}
+                      {% render 'icon' with 'arrow-right' %}
+                    </button>
+
+                    {% capture mobile_sublinks_menu %}
+                      {%- for subsublink in sublink.links -%}
+                        <a href="{{ subsublink.url }}" class="mobile-menu__submenu-link">
+                          {{ subsublink.title }}
+                        </a>
+                      {%- endfor -%}
+                    {% endcapture %}
+                    {% render 'global-sidebar', id: mobile_sublink_id, left_or_right: 'left', class_name: 'mobile-menu__submenu', heading: sublink.title, content: mobile_sublinks_menu, icon_name: 'arrow-left' %}
+
+                  {% else %}
+                    <a href="{{ sublink.url }}" class="mobile-menu__submenu-link">
+                      {{ sublink.title }}
+                    </a>
+                  {%- endif -%}
+
+                {%- endfor -%}
+              {% endcapture %}
+
+              {% render 'global-sidebar', id: mobile_link_id, left_or_right: 'left', class_name: 'mobile-menu__submenu', heading: link.title, content: mobile_links_menu, icon_name: 'arrow-left' %}
+
+            {% else %}
+              <a class="mobile-menu__link" href="{{ link.url }}">
+                {{ link.title }}
+              </a>
+            {%- endif -%}
+
+          {% endfor %}
+        </div>
+
+
+        {%- if mobile_sub_menu != blank -%}
+          <div class="mobile-menu__sub-main">
+            {% for link in linklists[mobile_sub_menu].links %}
+
+              {%- if link.links != blank -%}
+                {%- assign mobile_link_id = link.title | handleize | append: link.url | handleize | append: link.levels -%}
+                <button class="global-sidebar-button mobile-menu__btn" type="button" aria-expanded="false" aria-controls="{{ mobile_link_id }}">
+                  {{ link.title }}
+                  {% render 'icon' with 'arrow-right' %}
+                </button>
+
+                {% capture mobile_links_menu %}
+                  {%- for sublink in link.links -%}
+
+                    {%- if sublink.links != blank -%}
+                      {%- assign mobile_sublink_id = sublink.title | handleize | append: sublink.url | handleize | append: sublink.levels -%}
+                      <button class="global-sidebar-button mobile-menu__submenu-btn" type="button" aria-expanded="false" aria-controls="{{ mobile_sublink_id }}">
+                        {{ sublink.title }}
+                        {% render 'icon' with 'arrow-right' %}
+                      </button>
+
+                      {% capture mobile_sublinks_menu %}
+                        {%- for subsublink in sublink.links -%}
+                          <a href="{{ subsublink.url }}" class="mobile-menu__submenu-link">
+                            {{ subsublink.title }}
+                          </a>
+                        {%- endfor -%}
+                      {% endcapture %}
+                      {% render 'global-sidebar', id: mobile_sublink_id, left_or_right: 'left', class_name: 'mobile-menu__submenu', heading: sublink.title, content: mobile_sublinks_menu, icon_name: 'arrow-left' %}
+
+                    {% else %}
+                      <a href="{{ sublink.url }}" class="mobile-menu__submenu-link">
+                        {{ sublink.title }}
+                      </a>
+                    {%- endif -%}
+
+                  {%- endfor -%}
+                {% endcapture %}
+
+                {% render 'global-sidebar', id: mobile_link_id, left_or_right: 'left', class_name: 'mobile-menu__submenu', heading: link.title, content: mobile_links_menu, icon_name: 'arrow-left' %}
+
+              {% else %}
+                <a class="mobile-menu__link" href="{{ link.url }}">
+                  {{ link.title }}
+                </a>
+              {%- endif -%}
+  
+            {% endfor %}
+          </div>
+        {%- endif -%}
+
+        {% if customer %}
+          <a href="/account" class="mobile-menu__link-account btn btn--primary btn--full">
+            {{ 'layout.customer.account' | t }}
+          </a>
+        {% else %}
+          <a href="/account/login" class="mobile-menu__link-account btn btn--primary btn--full">
+            {{ 'layout.customer.log_in' | t }}
+          </a>
+        {% endif %}
+
+      </div>
+    {% endcapture %}
+    {% render 'global-sidebar', id: mobile_menu, left_or_right: 'left', class_name: 'mobile-menu__sidebar', content: mobile_menu_content %}
+  {%- endif -%}
+
+</header>
+
+{% schema %}
+  {
+    "name": "Header",
+    "settings": [
+      {
+        "type": "html",
+        "id": "logo_svg",
+        "label": "Logo svg"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_image",
+        "label": "Logo image"
+      },
+      {
+        "type": "range",
+        "id": "logo_max_width",
+        "min": 50,
+        "max": 450,
+        "step": 10,
+        "unit": "px",
+        "label": "Custom logo width",
+        "default": 250
+      },
+      {
+        "type": "range",
+        "id": "logo_max_width_mobile",
+        "min": 50,
+        "max": 450,
+        "step": 5,
+        "unit": "px",
+        "label": "Custom logo mobile width",
+        "default": 185
+      },
+      {
+        "type": "link_list",
+        "id": "main_linklist",
+        "label": "Menu",
+        "default": "main-menu"
+      },
+      {
+        "type": "link_list",
+        "id": "mobile_linklist",
+        "label": "Menu mobile"
+      },
+      {
+        "type": "link_list",
+        "id": "sub_mobile_linklist",
+        "label": "Sub menu mobile"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "megamenu",
+        "name": "Megamenu",
+        "settings": [
+          {
+            "type": "text",
+            "id": "menu_item",
+            "label": "Menu item"
+          },
+          {
+            "type": "link_list",
+            "id": "menu_item_linklist",
+            "label": "Menu"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

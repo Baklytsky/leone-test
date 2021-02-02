@@ -1,0 +1,44 @@
+@charset "UTF-8";
+/*============================================================================
+  [replace with theme name] | Built with Slate
+    - You cannot use native CSS/Sass @imports in this file without a build script
+==============================================================================*/
+
+/*================ UTILS ================*/
+@import url('tools/mixins.scss');
+
+/*================ SETTINGS ================*/
+@import url('settings/variables.scss.liquid');
+
+/*================ COMMON ================*/
+@import url('global/normalize.scss');
+@import url('global/slate-reset.scss');
+@import url('global/helper-classes.scss');
+@import url('global/grid.scss');
+@import url('global/layout.scss');
+@import url('global/icons.scss');
+@import url('global/rte.scss');
+@import url('global/responsive-tables.scss');
+@import url('global/links-buttons.scss');
+@import url('global/forms.scss');
+@import url('global/blank-states.scss');
+
+/*================ MODULES ================*/
+@import url('modules/header.scss');
+@import url('modules/footer.scss');
+@import url('modules/loader.scss');
+@import url('modules/announcement-bar.scss');
+@import url('modules/global-sidebar.scss');
+@import url('modules/product.scss');
+@import url('modules/collection.scss');
+@import url('modules/video.scss');
+@import url('modules/product-recently-viewed.scss');
+@import url('modules/cart-drawer.scss');
+@import url('modules/paginate.scss');
+@import url('modules/page.scss');
+@import url('modules/account.scss');
+@import url('modules/search.scss');
+
+/*================ VENDOR ================*/
+@import url('vendor/lazysizes.scss');
+@import url('vendor/slick.scss');

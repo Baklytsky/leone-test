@@ -1,0 +1,141 @@
+{%- assign show_tabs = section.settings.show_tabs -%}
+
+<h2 class="global-sidebar__heading cart-drawer-heading">{{ 'cart.general.title' | t }}</h2>
+
+<form class="cart-drawer-body {%- if cart.item_count == 0 -%} cart-drawer-body__mb {%- endif -%}" action="{{ routes.cart_url }}" method="POST" novalidate>
+  {%- if cart.item_count == 0 -%}
+    <p class="cart-drawer__empty">{{ 'cart.general.empty' | t }}</p>
+  {%- else -%}
+    <div class="cart-drawer-header">
+      <button type="submit" name="checkout" class="cart-drawer__checkout-btn btn btn--full btn--primary">
+        <span>{{- 'cart.general.checkout' | t -}}</span>
+        <span>|</span>
+        <span data-cart-subtotal>{{ cart.total_price | money_without_trailing_zeros }}</span>
+      </button>
+
+    </div>
+
+    <div class="cart-drawer-items">
+      {%- for line_item in cart.items -%}
+        <div class="cart-drawer-item__no-bundle">
+          <div class="cart-drawer-item">
+
+            {% render 'picture', image_desk: line_item.image, image_mobile: , class_name: 'cart-drawer-item__image', image_attr: , %}
+
+            <div class="cart-drawer-item__info">
+              <h3 class="cart-drawer-item__title">
+                <a href="{{ line_item.url }}">{{ line_item.product.title }}</a>
+              </h3>
+
+              {%- unless line_item.product.has_only_default_variant -%}
+                <p class="cart-drawer-item__variant">{{ line_item.variant.title }}</p>
+              {%- endunless -%}
+
+              <div class="cart-drawer-item__price-list">
+                <span class="cart-drawer-item__price">{{ line_item.final_line_price | money_without_trailing_zeros }}</span>
+              </div>
+
+            </div>
+
+            <div class="cart-drawer-item__actions">
+
+              <div class="cart-drawer-item__quantity">
+                <div class="cart-drawer-item__quantity-inner">
+                  <button type="button" class="cart-drawer-item__quantity-btn">
+                    <label for="Quantity" class="cart-drawer-item__quantity-label">{{ 'products.product.quantity' | t }}
+                      <input class="cart-drawer-item__quantity-input" type="number" name="quantity" min="1"
+                             data-action="change-quantity"
+                             data-line-id="{{ line_item.key }}" value="{{ line_item.quantity }}">
+                      <span class="cart-drawer-item__quantity-icon-wrapper">
+                              {% render 'icon' with 'dropdown' %}
+                            </span>
+                    </label>
+                  </button>
+
+                  <ul class="cart-drawer-item__quantity-list">
+                    {% for i in (1..50) %}
+                      <li role="option" data-value="{{ i }}" class="cart-drawer-item__quantity-item">{{ i }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+
+              <a href="{{ routes.cart_change_url }}?quantity=0&id={{ line_item.key }}" class="cart-drawer-item__remove btn btn--secondary" data-quantity="0" data-line-id="{{ line_item.key }}" data-action="remove-item">{{ 'cart.general.remove' | t }}</a>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="cart-drawer__footer">
+      <p class="cart-drawer__footer-subtotal">
+        {{- 'cart.general.subtotal' | t -}}
+        <span>{{ cart.total_price | money_without_trailing_zeros }}</span>
+      </p>
+
+      <button type="submit" name="checkout" class="cart-drawer__checkout-btn btn btn--full btn--primary">
+        <span>{{- 'cart.general.checkout' | t -}}</span>
+        <span>|</span>
+        <span data-cart-subtotal>{{ cart.total_price | money_without_trailing_zeros }}</span>
+      </button>
+
+    </div>
+  {%- endif -%}
+</form>
+
+{%- if show_tabs -%}
+  <div class="tabs">
+    {%- for block in section.blocks -%}
+      {%- assign heading = block.settings.heading -%}
+      {%- assign text = block.settings.text -%}
+
+      {%- if heading != blank and text != blank -%}
+        <div class="tab">
+          <button class="ariaToggleOneSlide" aria-expanded="false" aria-controls="cart-tab-{{ forloop.index0 }}">
+            {{ heading }}
+            {% render 'icon' with 'dropdown' %}
+          </button>
+
+          <div class="tab-text display--none" id="cart-tab-{{ forloop.index0 }}">
+            {{ text }}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Tabs"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tabs",
+      "label": "Show tabs"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "block",
+      "name": "Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

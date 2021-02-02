@@ -1,0 +1,64 @@
+{% comment %}
+  {% render 'embed-native-video', metafields: , custom_class: '', video: video[0],
+    muted: video_muted, poster: video_poster[0], poster_mobile: video_poster_mobile[0] %}
+{% endcomment %}
+
+
+<div class="video__wrapper {{ custom_class }}" data-section-type="ember-native-video" data-section-id="{{ video_url | handleize }}"
+     data-video-host="{%- if video_url contains 'youtube' or video_url contains 'youtu' or video_url contains 'vimeo' -%}youtube{% elsif video_url contains 'vimeo' %}vimeo{% endif %}">
+
+  {%- if video_url contains 'youtube' or video_url contains 'youtu' or video_url contains 'vimeo' -%}
+    {%- if video_url contains 'youtube' or video_url contains 'youtu' -%}
+      {% if video_url contains 'v=' %}
+        {% assign video_id = video_url | split: 'v=' %}
+      {% else %}
+        {% assign video_id = video_url | split: 'youtu.be/' %}
+      {% endif %}
+
+      <div class="video__iframe" id="video-{{ video_id[1] }}"
+           data-video-type="youtube"
+           data-video-id="{{ video_id[1] }}">
+
+        <div data-youtube-wrapper data-section-this-id="{{ video_url | handleize }}" id="youtube-{{ video_url | handleize }}" data-enable-sound="{{ muted }}"></div>
+      </div>
+    {% elsif video_url contains 'vimeo' %}
+      {% assign video_id = video_url | split: 'vimeo.com/' %}
+      <div class="video__iframe" id="video-{{ video_id[1] }}"
+           data-video-type="vimeo"
+           data-video-id="{{ video_id[1] }}">
+
+        <iframe id="vimeo" src="https://player.vimeo.com/video/{{ video_id[1] }}" width="100%" height="auto" allowfullscreen webkitallowfullscreen mozallowfullscreen allowfullscreen allow="autoplay; fullscreen; encrypted-media;" data-enable-sound="{{ muted }}"></iframe>
+
+      </div>
+    {%- endif -%}
+
+  {% elsif video != blank %}
+    <div class="video__iframe" id="video-{{ video.id }}"
+         data-video-type="{{ video.mime_type }}"
+         data-video-id="{{ video_id[1] }}">
+
+      <video {% if muted %} muted {% endif %} playsinline>
+        <source src="{{ video.src }}" type="{{ video.mime_type }}">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  {%- endif -%}
+
+  {%- if poster != blank -%}
+    {%- if metafields -%}
+      {% render 'picture-metafields', image_desk: poster, image_mobile: poster_mobile, class_name: 'video-image', %}
+    {% else %}
+      {% render 'picture', image_desk: poster, image_mobile: poster_mobile, class_name: 'video-image', %}
+    {%- endif -%}
+
+    <button type="button" class="video-play">
+      <span class="sr-only">Play</span>
+      {% render 'icon' with 'play' %}
+    </button>
+  {% elsif video != blank and video_url == blank %}
+    <button type="button" class="video-play">
+      <span class="sr-only">Play</span>
+      {% render 'icon' with 'play' %}
+    </button>
+  {%- endif -%}
+</div>

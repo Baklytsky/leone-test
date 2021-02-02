@@ -1,0 +1,22 @@
+{% comment %}
+  <button class="global-sidebar-button" aria-controls="{{ id }}"></button>
+  {% render 'global-sidebar', id: block.id, left_or_right: 'right', class_name: '', heading: sidebar_heading, content: content, icon_name: 'close' %}
+{% endcomment %}
+
+{%- assign icon = icon_name | default: 'close' -%}
+
+<aside class="global-sidebar {{ left_or_right }} {{ class_name }}" id="{{ id }}" aria-hidden="true">
+  <div class="global-sidebar__header">
+    <button class="close"><span class="sr-only">close</span>{% render 'icon' with icon %}</button>
+  </div>
+  <div class="global-sidebar__wrapper">
+    <div class="global-sidebar__container">
+      {%- if heading -%}
+        <h2 class="global-sidebar__heading">
+          {{ heading }}
+        </h2>
+      {%- endif -%}
+      {{ content }}
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,50 @@
+.announcement-bar {
+  background-color: $color-bar-bg;
+  padding: 16px 60px;
+  overflow-x: hidden;
+
+  @include media-query($extra-large-down) {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  @include media-query($medium-down) {
+    padding: 15px 20px;
+    text-align: center;
+  }
+
+  .announcement-bar__item {
+    width: 100%;
+  }
+
+  .announcement-bar__text {
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: $color-bar-text;
+    margin-bottom: 0;
+    margin-right: 20px;
+
+    @include media-query($small) {
+      font-size: 14px;
+      margin-right: 10px;
+    }
+  }
+
+  .announcement-bar__button {
+    color: $color-bar-link;
+    font-size: 18px;
+
+    @include media-query($small) {
+      font-size: 14px;
+    }
+  }
+}
+
+.announcement-bar__modal-content {
+  color: $color-body-text;
+  font-size: 18px;
+  font-weight: $font-weight-text;
+  line-height: 1.38;
+}

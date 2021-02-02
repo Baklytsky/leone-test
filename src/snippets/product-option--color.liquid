@@ -1,0 +1,56 @@
+<div class="product-options-swatch" data-option="option{{ option.position }}">
+  <div class="product-options-swatch__wrapper">
+    <label class="visually-hidden" for="SingleOptionSelector-{{ index }}-{{product.id}}">
+      {{ option.name }}
+    </label>
+
+    <fieldset
+        id="SingleOptionSelector-{{ index }}-{{product.id}}"
+        data-index="option{{ option.position }}">
+      <div class="clearfix product-options-swatch__inner">
+        {% for value in option.values %}
+          {% assign variant_name = value %}
+
+          {% for variant in product.variants %}
+            {%- if variant.option1 == value or variant.option2 == value or variant.option3 == value -%}
+              {% assign variant_image = variant.metafields.product_system.variant_image %}
+              {% break %}
+            {%- endif -%}
+          {% endfor %}
+          {%- assign color_swatch_variant_image = variant_image | color_swatch_image -%}
+
+          {%- if variant_image == blank -%}
+            {%- assign downcased_value = value | downcase -%}
+            {%- assign color_swatch_name = value | handle | append: '.png' -%}
+            {%- assign color_swatch_variant_image = images[color_swatch_name] -%}
+          {%- endif -%}
+
+          <div data-value="{{ value | escape }}" class="product-options-swatch__item {{ value | handle }}">
+            <input
+                class="product-options-swatch__input"
+                id="option-{{ value }}-{{ index }}"
+                type="radio"
+                name="{{ option.name }}"
+                value="{{ value | escape }}"
+                data-single-option-selector
+                data-index="option{{ option.position }}"
+                aria-label="{{ value }}"
+                {% if option.selected_value == value %}checked="checked"{% endif %}>
+            <label class="product-options-swatch__label" for="option-{{ value }}-{{ index }}">
+            <span class="product-options-swatch__image {% if downcased_value == 'white' %}product-options-swatch__image--white{% endif %}"
+                  style="background-color: {{ value | replace: ' ', '' | downcase }};
+                {% if variant_image != blank %}background-image: url({{ color_swatch_variant_image }})
+                {% elsif color_swatch_variant_image != blank %} background-image: url({{ color_swatch_variant_image | img_url: '60x' }}){% endif %}"></span>
+              <span class="sr-only">{{ value }}</span>
+            </label>
+          </div>
+        {% endfor %}
+      </div>
+    </fieldset>
+  </div>
+  <div class="product-options-swatch__info">
+    <span class="product-options-swatch__info-text">
+      {{ option.selected_value }}
+    </span>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<div class="product-options">
+  <div class="product-options__inner">
+    <button type="button" class="product-options__button" id="" {%- if option.values.size == 1 -%} style="pointer-events: none"{%- endif -%}>
+      <label for="{{ option.name }}" class="product-options__label">
+        <span class="sr-only">{{ option.name }}</span>
+        <input class="product-options__input"
+               data-single-option-selector
+               data-index="option{{ option.position }}"
+               name="{{ option.name }}"
+               type="text"
+               value='{{ option.selected_value }}'/>
+
+        {%- if option.values.size > 1 -%}
+          <span class="product-options__icon-wrapper">
+            {% render 'icon' with 'dropdown' %}
+          </span>
+        {%- endif -%}
+      </label>
+    </button>
+
+    <ul class="product-options__list" id="">
+      {% for value in option.values %}
+        <li role="option" data-value='{{ value }}' class="product-options__item {% if option.selected_value == value %}selected{% endif %}">{{ value }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

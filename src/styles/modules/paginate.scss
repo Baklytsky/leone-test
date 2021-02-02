@@ -1,0 +1,54 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+
+  span {
+    margin: 0 5px;
+
+    @include media-query($small) {
+      margin: 0 2px;
+    }
+  }
+
+  a {
+    @extend .btn, .btn--secondary;
+    min-width: 60px;
+    width: auto;
+    padding: 15px;
+
+    @include media-query($small) {
+      padding: 8px;
+      min-width: auto;
+    }
+  }
+
+  .current {
+    @extend .btn, .btn--primary;
+    min-width: 60px;
+    width: auto;
+    margin: auto 5px;
+    padding: 15px;
+
+    @include media-query($small) {
+      padding: 8px;
+      min-width: auto;
+      margin: auto 2px;
+    }
+  }
+
+  .next,
+  .prev {
+    a {
+      @extend .btn--secondary;
+      min-width: 120px;
+
+      @include media-query($small) {
+        min-width: 60px;
+        font-size: 12px;
+      }
+    }
+  }
+}

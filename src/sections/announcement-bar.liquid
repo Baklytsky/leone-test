@@ -1,0 +1,114 @@
+{%- if section.blocks.size > 0 -%}
+  {%- capture slick_config -%}
+  {
+    "arrows": false,
+    "autoplay": true,
+    "fade": true,
+    "cssEase": "linear",
+    "speed": 1000,
+    "autoplaySpeed": {{ section.settings.announce_autoplay_speed }}
+  }
+  {%- endcapture -%}
+
+  <div class="announcement-bar" data-section-type="slideshow" data-slick-config='{{ slick_config }}'>
+    {%- for block in section.blocks -%}
+      {%- assign text = block.settings.announce_text -%}
+      {%- assign text_2 = block.settings.announce_text_2 -%}
+      {%- assign button = block.settings.announce_button_label -%}
+      {%- assign sidebar_text = block.settings.text -%}
+
+      {%- if text != blank or text_2 != blank or button != blank -%}
+        <div class="announcement-bar__item">
+          {%- if text != blank -%}
+            <p class="announcement-bar__text">
+              {{ text }}
+            </p>
+          {%- endif -%}
+
+          {%- if text_2 != blank -%}
+            <p class="announcement-bar__text">
+              {{ text_2 }}
+            </p>
+          {%- endif -%}
+
+          {%- if button != blank and sidebar_text != blank -%}
+            <button type="button" class="button--link announcement-bar__button global-sidebar-button" aria-controls="{{ block.id }}">
+              {{ button }}
+            </button>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}
+
+{%- for block in section.blocks -%}
+  {%- assign button = block.settings.announce_button_label -%}
+  {%- assign sidebar_heading = block.settings.heading -%}
+  {%- assign sidebar_text = block.settings.text -%}
+
+  {%- if button != blank and sidebar_text != blank -%}
+    {% capture content %}
+      <div class="announcement-bar__modal-content">
+        {{ sidebar_text | newline_to_br }}
+      </div>
+    {% endcapture %}
+
+    {% render 'global-sidebar', id: block.id, left_or_right: 'right', heading: sidebar_heading, content: content %}
+  {%- endif -%}
+{%- endfor -%}
+
+{% schema %}
+  {
+    "name": "Announcement bar",
+    "settings": [
+      {
+        "type":   "range",
+        "id": "announce_autoplay_speed",
+        "label": "Autoplay speed",
+        "min":       1000,
+        "max":       9000,
+        "step":      1000,
+        "unit":      "ms",
+        "default":   3000
+      }
+    ],
+    "blocks": [
+      {
+        "type": "block",
+        "name": "Block",
+        "settings": [
+          {
+            "type": "text",
+            "id": "announce_text",
+            "label": "Text"
+          },
+          {
+            "type": "text",
+            "id": "announce_text_2",
+            "label": "Text second"
+          },
+          {
+            "type": "text",
+            "id": "announce_button_label",
+            "label": "Button label"
+          },
+          {
+            "type": "header",
+            "content": "Modal content"
+          },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

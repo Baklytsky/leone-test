@@ -1,0 +1,60 @@
+/*================ General layout styles ================*/
+
+html {
+  overflow-x: hidden;
+  font-size: $font-size-base;
+  body {
+    background-color: $color-body;
+    font-family: $font-primary;
+    font-size: $font-size-base;
+
+    * {
+      -webkit-font-smoothing: antialiased;
+    }
+
+    &.outline-none *{
+      outline: none !important;
+    }
+  }
+
+  main {
+    & > div:not(.shopify-section),
+    & > section {
+      overflow: hidden;
+    }
+  }
+}
+
+.page-width,
+.wrapper {
+  @include clearfix();
+  max-width: $width-site;
+  padding-right: $gutter;
+  padding-left: $gutter;
+  margin: 0 auto;
+  width: 100%;
+
+  @include media-query($extra-widescreen) {
+    max-width: $width-site-percentage;
+  }
+}
+
+.page-width {
+  padding-top: $gutter * 2;
+  padding-bottom: $gutter;
+
+  @include media-query($small) {
+    padding-top: $gutter;
+  }
+}
+
+.image-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}

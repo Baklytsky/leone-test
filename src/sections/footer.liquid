@@ -1,0 +1,202 @@
+{%- assign show_newsletter = section.settings.show_newsletter -%}
+{%- assign newsletter_id = 'newsletter-' | append: section.id -%}
+{%- assign newsletter_heading = section.settings.newsletter_heading -%}
+{%- assign newsletter_text = section.settings.newsletter_text -%}
+{%- assign newsletter_button_label = section.settings.newsletter_button_label -%}
+{%- assign newsletter_sidebar_heading = section.settings.newsletter_sidebar_heading -%}
+{%- assign newsletter_sidebar_text = section.settings.newsletter_sidebar_text -%}
+{%- assign newsletter_sidebar_after_form = section.settings.newsletter_sidebar_after_form -%}
+{%- assign footer_linklist = section.settings.footer_linklist -%}
+{%- assign show_social = section.settings.show_social -%}
+{%- assign social_accounts = 'Facebook, Instagram, Twitter, Pinterest, Snapchat, Tumblr, YouTube, Vimeo,' | split: ', ' -%}
+{%- assign mobile_button_label = section.settings.mobile_button_up_label -%}
+
+<footer class="footer">
+
+  <div class="wrapper">
+    <div class="footer-inner">
+      {%- if show_newsletter -%}
+        <div class="footer-newsletter">
+          {%- if newsletter_heading != blank -%}
+            <h3 class="footer-heading">
+              {{ newsletter_heading }}
+            </h3>
+          {%- endif -%}
+          {%- if newsletter_text != blank -%}
+            <p class="footer-newsletter__text">
+              {{ newsletter_text }}
+            </p>
+          {%- endif -%}
+          {%- if newsletter_button_label != blank -%}
+            <button class="footer-newsletter__button global-sidebar-button type-arrow icon-arrow-animate" aria-controls="{{ newsletter_id }}">
+              <span>{{ newsletter_button_label }}</span>
+              {% render 'icon' with 'arrow-long-right' %}
+            </button>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {% if linklists[footer_linklist].links.size > 0 %}
+        {% for link in linklists[footer_linklist].links %}
+          <ul class="footer-menu-block">
+            <li class="footer-heading"><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {% for sublink in link.links %}
+              <li class="footer-menu__subitem"><a href="{{ sublink.url }}">{{ sublink.title }}</a></li>
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      {% endif %}
+
+      {%- if show_social -%}
+        <ul class="footer-social">
+          {% for social in social_accounts %}
+            {%- assign social_handle = social | handleize -%}
+            {% capture social_link %}social_{{ social_handle }}_link{% endcapture %}
+
+            {% if settings[social_link] != blank %}
+              <li class="footer-social__item">
+                <a href="{{ settings[social_link] }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: social }}">
+                  {% render 'icon' with social_handle %}
+                  <span class="icon-fallback-text">{{ social }}</span>
+                </a>
+              </li>
+            {% endif %}
+
+          {% endfor %}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    <a href="#top" class="footer-button btn btn--secondary btn--full">
+      {{ mobile_button_label }}
+    </a>
+  </div>
+</footer>
+
+{%- if show_newsletter -%}
+  {% capture newsletter_content %}
+
+  {% form 'customer' %}
+    {{ form.errors | default_errors }}
+    {% if form.posted_successfully? %}
+      <h2 class="global-sidebar__heading">
+        {{ 'general.newsletter.signup_form_confirmation_heading' | t }}
+      </h2>
+      <p class="note form-success">{{ 'general.newsletter.signup_form_confirmation_text' | t }}</p>
+    {% else %}
+      {%- if newsletter_sidebar_heading -%}
+        <h2 class="global-sidebar__heading">
+          {{ newsletter_sidebar_heading }}
+        </h2>
+      {%- endif -%}
+      {%- if newsletter_sidebar_text != blank -%}
+        <p class="footer-newsletter__sidebar-text">
+          {{ newsletter_sidebar_text }}
+        </p>
+      {%- endif -%}
+
+      <div class="footer-newsletter__sidebar-input-wrapper">
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <input type="email" required value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter.signup_form_email_placeholder' | t }}"
+               name="contact[email]" id="Email" class="input-full" aria-label="{{ 'general.newsletter.signup_form_email_placeholder' | t }}"
+               autocorrect="off" autocapitalize="off">
+        <input type="text" placeholder="{{ 'general.newsletter.signup_form_zip_code_placeholder' | t }}"
+               name="contact[note][ZipCode]" id="ZipCode" class="input-full" aria-label="{{ 'general.newsletter.signup_form_zip_code_placeholder' | t }}">
+      </div>
+      <button type="submit" class="footer-newsletter__sidebar-btn btn btn--primary btn--full" name="subscribe" id="subscribe">
+        {{ 'general.newsletter.signup_form_submit' | t }}
+      </button>
+
+      {%- if newsletter_sidebar_after_form != blank -%}
+        <div class="footer-newsletter__sidebar-after-text">
+          {{ newsletter_sidebar_after_form }}
+        </div>
+      {%- endif -%}
+
+    {% endif %}
+  {% endform %}
+
+  {% endcapture %}
+
+  {% render 'global-sidebar', id: newsletter_id, left_or_right: 'right', content: newsletter_content, icon_name: 'close' %}
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "Footer",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Mobile button UP"
+      },
+      {
+        "type": "text",
+        "id": "mobile_button_up_label",
+        "label": "Label",
+        "default": "Back to top"
+      },
+      {
+        "type": "header",
+        "content": "Newsletter"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_newsletter",
+        "label": "Show"
+      },
+      {
+        "type": "text",
+        "id": "newsletter_heading",
+        "label": "Heading"
+      },
+      {
+        "type": "text",
+        "id": "newsletter_text",
+        "label": "Text"
+      },
+      {
+        "type": "text",
+        "id": "newsletter_button_label",
+        "label": "Button label"
+      },
+      {
+        "type": "header",
+        "content": "Newsletter sidebar content"
+      },
+      {
+        "type": "text",
+        "id": "newsletter_sidebar_heading",
+        "label": "Heading"
+      },
+      {
+        "type": "text",
+        "id": "newsletter_sidebar_text",
+        "label": "Text"
+      },
+      {
+        "type": "richtext",
+        "id": "newsletter_sidebar_after_form",
+        "label": "After form text"
+      },
+      {
+        "type": "header",
+        "content": "Navigation"
+      },
+      {
+        "type": "link_list",
+        "id": "footer_linklist",
+        "label": "Menu"
+      },
+      {
+        "type": "header",
+        "content": "Social"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_social",
+        "label": "Show"
+      }
+    ]
+  }
+
+{% endschema %}

@@ -1,0 +1,24 @@
+{% comment %}
+{% render 'picture', image_desk: , image_mobile: , class_name: , image_attr: , %}
+{% endcomment %}
+
+{%- assign alt = image_desk.alt -%}
+{%- assign image_mobile = image_mobile | default: image_desk  -%}
+{%- assign img_desk_url = image_desk | img_url: '1x1' -%}
+
+<picture class="{{ class_name }}">
+  <source data-srcset="{{ image_mobile | img_url: '360x' }} 360w" media="(max-width: 360px)" />
+  <source data-srcset="{{ image_mobile | img_url: '540x' }} 540w" media="(max-width: 540px)" />
+  <source data-srcset="{{ image_mobile | img_url: '720x' }} 720w" media="(max-width: 767px)" />
+  <source data-srcset="{{ image_desk | img_url: '900x' }} 900w" media="(max-width: 900px)" />
+  <source data-srcset="{{ image_desk | img_url: '1080x' }} 1080w" media="(max-width: 1080px)" />
+  <source data-srcset="{{ image_desk | img_url: '1296x' }} 1296w" media="(max-width: 1296px)" />
+  <source data-srcset="{{ image_desk | img_url: '1512x' }} 1512w" media="(max-width: 1512px)" />
+  <source data-srcset="{{ image_desk | img_url: '1728x' }} 1728w" />
+  <img class="lazyload"
+       data-sizes="auto"
+       data-src="{{ img_desk_url }}"
+       data-parent-fit="contain"
+       alt="{{ alt }}"
+          {{ image_attr }} />
+</picture>

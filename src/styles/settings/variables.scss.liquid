@@ -1,0 +1,243 @@
+/*================ Color Variables ================*/
+// Heading colors
+$color-heading-text: {{ settings.color_heading_text }};
+
+// Text colors
+$color-body-text: {{ settings.color_body_text }};
+$color-alert-text: {{ settings.color_alert }};
+
+// Background colors
+$color-body: {{ settings.color_body_bg }};
+$color-modal-bg: {{ settings.color_modal_bg }};
+
+// Icon color
+$color-icon: {{ settings.color_icon }};
+$color-error-icon: {{ settings.color_error_icon }};
+$color-success-icon: {{ settings.color_success_icon }};
+
+// Dropdown color
+$color-dropdown: {{ settings.color_dropdown }};
+
+// Modal colors
+$color-sidebar-bg: {{ settings.color_global_sidebar_bg }};
+$color-sidebar-overlay-bg: {{ settings.color_global_sidebar_bg_overlay | color_modify: 'alpha', 0.25 }};
+
+// Announcement bar colors
+$color-bar-bg: {{ settings.color_bar_bg }};
+$color_bar_text: {{ settings.color_bar_text }};
+$color_bar_link: {{ settings.color_bar_link }};
+
+// Header colors
+$color-header-bg: {{ settings.color_header_bg }};
+$color-header-text: {{ settings.color_header_text }};
+
+// Footer colors
+$color-footer-bg: {{ settings.color_footer_bg }};
+$color-footer-text: {{ settings.color_footer_text }};
+
+// Border colors
+$color-border: {{ settings.color_border }};
+$color-border-secondary: {{ settings.color_border_secondary }};
+
+// Buttons colors
+// Link
+$color-link-text: {{ settings.color_link_text }};
+$color-link-hover-text: {{ settings.color_link_hover_text }};
+// Primary
+$color-primary-btn-text: {{ settings.color_primary_button_text }};
+$color-primary-btn-hover-text: {{ settings.color_primary_button_hover_text }};
+$color-primary-btn-bg: {{ settings.color_primary_button_bg }};
+$color-primary-btn-bg-hover: {{ settings.color_primary_button_bg_hover }};
+$color-primary-btn-border: {{ settings.color_primary_button_border }};
+$color-primary-btn-border-hover: {{ settings.color_primary_button_border_hover }};
+$color-primary-btn-bg-alert: {{ settings.color_primary_button_bg_alert }};
+$color-primary-btn-bg-alert-hover: {{ settings.color_primary_button_bg_alert_hover }};
+$color-primary-btn-bg-disabled: {{ settings.color_primary_button_bg_disabled }};
+// Secondary
+$color-secondary-btn-text: {{ settings.color_secondary_button_text }};
+$color-secondary-btn-hover-text: {{ settings.color_secondary_button_hover_text }};
+$color-secondary-btn-bg: {{ settings.color_secondary_button_bg }};
+$color-secondary-btn-bg-hover: {{ settings.color_secondary_button_bg_hover }};
+$color-secondary-btn-border: {{ settings.color_secondary_button_border }};
+$color-secondary-btn-border-hover: {{ settings.color_secondary_button_border_hover }};
+$color-secondary-btn-bg-alert: {{ settings.color_secondary_button_bg_alert }};
+$color-secondary-btn-bg-alert-hover: {{ settings.color_secondary_button_bg_alert_hover }};
+$color-secondary-btn-bg-disabled: {{ settings.color_secondary_button_bg_disabled }};
+
+// Helper colors for form states
+$color-form-field-text: {{ settings.color_form_field }};
+$color-form-field-ph-text: {{ settings.color_form_field_placeholder }};
+$color-form-field-alert-text: {{ settings.color_form_field_alert_text }};
+$color-form-field-bg: {{ settings.color_form_field_bg }};
+$color-form-field-bg-disabl: {{ settings.color_form_field_bg_disabled }};
+$color-form-field-border: {{ settings.color_form_field_border }};
+$color-form-field-border-alert: {{ settings.color_form_field_border_alert }};
+
+// Loadeer colors
+$color-site-loader-bg: {{ settings.color_site_loader_bg }};
+$color-site-loader: {{ settings.color_site_loader }};
+
+$color-cart-loader-bg: {{ settings.color_cart_loader_bg }};
+$color-cart-loader: {{ settings.color_cart_loader }};
+
+/*================ Typography Variables ================*/
+@font-face {
+  font-family: "ProximaNova";
+  src: url('{{ "ProximaNova-Black.otf" | asset_url }}') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url('{{ "ProximaNova-Bold.otf" | asset_url }}') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url('{{ "ProximaNova-Regular.otf" | asset_url }}') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ProximaNova";
+  src: url('{{ "ProximaNova-Light.otf" | asset_url }}') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@font-face {
+  font-family: "AbrilDisplay";
+  src: url('{{ "Abril_Display_Black.otf" | asset_url }}') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AbrilDisplay";
+  src: url('{{ "Abril_Display_Bold.otf" | asset_url }}') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AbrilDisplay";
+  src: url('{{ "Abril_Display_SemiBold.otf" | asset_url }}') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "AbrilDisplay";
+  src: url('{{ "Abril_Display_Regular.otf" | asset_url }}') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ProximaNovaOriginal";
+  src: url('{{ "ProximaNova-Regular.otf" | asset_url }}') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+$font-primary: 'ProximaNova', sans-serif;
+$font-secondary: 'AbrilDisplay', serif;
+$font-primary-rg: 'ProximaNovaOriginal', sans-serif;
+
+$font-weight-normal: 400;
+$font-weight-bold: 700;
+
+$font-weight-heading: 600;
+$font-weight-text: 400;
+$font-weight-button: 700;
+
+$font-heading: $font-secondary;
+$font-text: $font-primary;
+$font-button: $font-primary;
+
+$font-menu-link: $font-secondary;
+$font-menu-sublink: $font-primary-rg;
+$font-weight-menu-link: 600;
+$font-weight-menu-sublink: 400;
+
+$font-footer: $font-primary;
+$font-size-base: 18px;
+
+/*============================================================================
+  Grid Breakpoints and Class Names
+    - Do not change the variable names
+==============================================================================*/
+$grid-extra-small: 400px;
+$grid-medium: 750px;
+$grid-large: 990px;
+$grid-extra-large: 1200px;
+$grid-widescreen: 1400px;
+$grid-extra-widescreen: 1600px;
+$grid-gutter: 30px;
+
+$extra-small: 'extra-small';
+$small: 'small';
+$medium: 'medium';
+$medium-down: 'medium-down';
+$medium-up: 'medium-up';
+$large: 'large';
+$large-down: 'large-down';
+$large-up: 'large-up';
+$extra-large: 'extra-large';
+$extra-large-down: 'extra-large-down';
+$extra-large-up: 'extra-large-up';
+$widescreen: 'widescreen';
+$extra-widescreen: 'extra-widescreen';
+
+// The `$breakpoints` list is used to build our media queries.
+// You can use these in the media-query mixin.
+$breakpoints: (
+  $extra-small '(max-width: #{$grid-extra-small - 1})',
+  $small '(max-width: #{$grid-medium - 1})',
+  $medium '(min-width: #{$grid-medium}) and (max-width: #{$grid-large - 1})',
+  $medium-down '(max-width: #{$grid-large - 1})',
+  $medium-up '(min-width: #{$grid-medium})',
+  $large '(min-width: #{$grid-large}) and (max-width: #{$grid-extra-large - 1})',
+  $large-down '(max-width: #{$grid-extra-large - 1})',
+  $large-up '(min-width: #{$grid-large})',
+  $extra-large '(min-width: #{$grid-extra-large}) and (max-width: #{$grid-widescreen - 1})',
+  $extra-large-down '(max-width: #{$grid-widescreen - 1})',
+  $extra-large-up '(min-width: #{$grid-extra-large})',
+  $widescreen '(min-width: #{$grid-widescreen})',
+  $extra-widescreen '(min-width: #{$grid-extra-widescreen})'
+);
+
+/*============================================================================
+  Generate breakpoint-specific column widths and push classes
+    - Default column widths: $breakpoint-has-widths: ($small, $medium-up);
+    - Default is no push classes
+    - Will not work if `styles/global/grid.scss` is removed
+==============================================================================*/
+$breakpoint-has-widths: ($small, $medium-up);
+$breakpoint-has-push: ();
+
+/*================ Sizing Variables ================*/
+$width-site: 1260px;
+$width-site-percentage: 80%;
+$gutter: 30px;
+
+/*================ Z-Index ================*/
+$z-index-dropdown: 2;
+$z-index-skip-to-content: 10000; // really high to be safe of app markup
+
+/*================ SVG ================*/
+$svg-select-icon: #{'{{ "ico-select.svg" | asset_url }}'};

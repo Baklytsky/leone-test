@@ -1,0 +1,112 @@
+<div class="product__form" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+  <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+  <meta itemprop="price" content="{{ current_variant.price | divided_by: 100.00 }}">
+  <link itemprop="availability" href="http://schema.org/{% if current_variant.available %}InStock{% else %}OutOfStock{% endif %}">
+
+  <form action="/cart/add" method="post" enctype="multipart/form-data">
+    {% unless product.has_only_default_variant %}
+      {% for option in product.options_with_values %}
+        {%- assign index = forloop.index0 -%}
+
+        {%- assign downcased_option = option.name | downcase -%}
+        {%- if downcased_option contains 'color' -%}
+          {%- render 'product-option--color', option: option, index: index -%}
+        {%- endif -%}
+      {% endfor %}
+
+      <div class="product-quantity-options">
+        {% for option in product.options_with_values %}
+          {%- assign index = forloop.index0 -%}
+
+          {%- assign downcased_option = option.name | downcase -%}
+          {%- unless downcased_option contains 'color' -%}
+            {%- render 'product-option', option: option, index: index -%}
+          {%- endunless -%}
+        {% endfor %}
+
+        <div class="product-quantity">
+          <div class="product-quantity__inner">
+            <button type="button" class="product-quantity__button">
+              <label for="Quantity" class="product-quantity__label">{{ 'products.product.quantity' | t }}
+                <input class="product-quantity__input" type="number" id="Quantity" name="quantity" value="1" min="1">
+                <span class="product-quantity__icon-wrapper">
+              {% render 'icon' with 'dropdown' %}
+            </span>
+              </label>
+            </button>
+
+            <ul class="product-quantity__list" id="">
+              {% for i in (1..10) %}
+                <li role="option" data-value="{{ i }}" class="product-quantity__item">{{ i }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    {% endunless %}
+
+    {%- if product.has_only_default_variant -%}
+      <div class="product-quantity full-width">
+        <div class="product-quantity__inner">
+          <button type="button" class="product-quantity__button">
+            <label for="Quantity" class="product-quantity__label">{{ 'products.product.quantity' | t }}
+              <input class="product-quantity__input" type="number" id="Quantity" name="quantity" value="1" min="1">
+              <span class="product-quantity__icon-wrapper">
+              {% render 'icon' with 'dropdown' %}
+            </span>
+            </label>
+          </button>
+
+          <ul class="product-quantity__list" id="">
+            {% for i in (1..10) %}
+              <li role="option" data-value="{{ i }}" class="product-quantity__item">{{ i }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {%- endif -%}
+
+    <select name="id" class="no-js" data-product-select>
+      {% for variant in product.variants %}
+        <option
+            data-variant-price="{{ variant.price }}"
+            {% if variant == current_variant %}selected="selected"{% endif %}
+            {% unless variant.available %}disabled="disabled"{% endunless %}
+            value="{{ variant.id }}">
+          {{ variant.title }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <button
+        type="submit"
+        name="add"
+        class="product-btn-add btn btn--full btn--primary {% unless current_variant.available %} btn--alert {% endunless %}"
+        data-add-to-cart
+        {% unless current_variant.available %}disabled="disabled"{% endunless %}>
+          <span data-add-to-cart-text>
+            {%- if current_variant.available -%}
+              {{ 'products.product.add_to_cart' | t }}
+            {% else %}
+              {{ 'products.product.sold_out' | t }}
+            {%- endif -%}
+          </span>
+          <span data-price-wrapper {% unless current_variant.available %} style="display: none;" {% endunless %}>
+            <span> | </span>
+            <span data-product-price>
+              {{ current_variant.price | money_without_trailing_zeros }}
+            </span>
+            {% if product.compare_at_price_max > product.price %}
+              <span class="visually-hidden" data-compare-text>{{ 'products.product.regular_price' | t }}</span>
+              <s data-compare-price>
+                {% if current_variant.compare_at_price > current_variant.price %}
+                  {{ current_variant.compare_at_price | money_without_trailing_zeros }}
+                {% endif %}
+              </s>
+            {% endif %}
+          </span>
+    </button>
+  </form>
+
+</div>

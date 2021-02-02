@@ -1,0 +1,128 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign featured_image = current_variant.featured_image | default: product.featured_image -%}
+{%- assign product_info_heading = section.settings.product_info_heading -%}
+{%- assign product_info_icons = product.metafields.product-info-i-t.product_information_icon -%}
+
+{%- capture slick_config -%}
+    {
+    "arrows": true,
+    "variableWidth": false,
+    "infinite": false,
+    "centerMode": false,
+    "slidesToScroll": 1,
+    "slidesToShow": 1.6,
+    "responsive": [
+        {
+          "breakpoint": 768,
+          "settings": {
+            "arrows": false,
+            "dots": true,
+            "slidesToShow": 1
+          }
+        }
+      ]
+    }
+  {%- endcapture -%}
+
+<div class="product-template" data-section-id="{{ section.id }}" data-section-type="product" data-template="{{ template.suffix }}" data-enable-history-state="true" itemscope itemtype="http://schema.org/Product">
+  <meta itemprop="name" content="{{ product.title }}{% unless product.has_only_default_variant %} - {{ current_variant.title }}{% endunless %}">
+  <meta itemprop="url" content="{{ shop.url }}{{ current_variant.url }}">
+  <meta itemprop="brand" content="{{ product.vendor }}">
+  <meta itemprop="image" content="{{ featured_image | img_url: '600x600' }}">
+  <meta itemprop="description" content="{{ product.description | strip_html | escape }}">
+
+  <div class="product__header wrapper">
+    <h1 class="product__title">{{ product.title }}</h1>
+
+    {%- if settings.enable_reviews -%}
+      <a class="product__reviews-badge" href="#review-scroll" data-additional-height="150">
+        {% if product.metafields.spr.reviews %}
+          {% capture review_data %}{{ product.metafields.spr.reviews }}{% endcapture %}
+          {% assign review_data1 = review_data | split: "ratingValue" %}
+          {% assign review_data2 = review_data1[1] | split: ":" %}
+          {% assign review_data3 = review_data2[1] | split: '"' %}
+          {% assign review_rating_value = review_data3[1] | plus: 1 | minus: 1 %}
+        {% endif %}
+
+        <span class="product__reviews-badge-star {% unless review_rating_value > 0 %} product__reviews-badge-star-empty {% endunless %}">
+          {% render 'icon' with 'star' %}
+        </span>
+        <span class="product__reviews-badge-text">
+          {%- if review_rating_value > 0 -%}
+            {{ review_rating_value }} Rating
+          {% else %}
+            No reviews
+          {%- endif -%}
+        </span>
+      </a>
+    {%- endif -%}
+  </div>
+
+  <div class="product__images-wrapper">
+    <div class="product__images" data-product-slideshow data-section-type="slideshow" data-slick-config='{{ slick_config }}' data-slick-arrows="true">
+      {%- for image in product.images -%}
+        {%- if image == featured_image -%}
+          {%- assign image_attr = 'data-product-featured-image data-product-image data-product-image-id="' | append: image.id | append: '"'  -%}
+          {% render 'picture', image_desk: image, class_name: 'product__image', image_attr: image_attr %}
+        {% else %}
+          {%- assign image_attr = 'data-product-image data-product-image-id="' | append: image.id | append: '"'  -%}
+          {% render 'picture', image_desk: image, class_name: 'product__image', image_attr: image_attr %}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="product__content wrapper">
+    <div class="product-info">
+      {%- if product_info_heading != blank -%}
+        <h2 class="product__info-heading">
+          {{ product_info_heading }}
+        </h2>
+      {%- endif -%}
+
+      {%- if product.description != blank -%}
+        <div class="product-description rte rte-list">
+          {{ product.description }}
+        </div>
+      {%- endif -%}
+
+      {%- if product_info_icons != blank -%}
+        <div class="product-info__icons">
+          {%- for icon_arr in product_info_icons -%}
+            {%- assign text = product.metafields.product-info-i-t.product_information_text[forloop.index0] -%}
+            {%- assign icon = icon_arr[0] -%}
+
+            <p class="product-info__icons-item">
+              {% render 'picture-metafields', image_desk: icon, class_name: 'product-info__icons-icon' %}
+              {{ text }}
+            </p>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {% render 'product-tabs' %}
+    </div>
+
+    {% render 'product-form', current_variant: current_variant %}
+  </div>
+
+  {% unless product == empty %}
+    <script type="application/json" data-product-json>
+      {{ product | json }}
+    </script>
+  {% endunless %}
+</div>
+
+{% schema %}
+  {
+    "name": "Product pages",
+    "settings": [
+      {
+        "type": "text",
+        "id": "product_info_heading",
+        "label": "Product information heading",
+        "default": "Overview"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,33 @@
+{%- assign show_section = product.metafields.product-video.show_section -%}
+{%- assign heading = product.metafields.product-video.heading -%}
+{%- assign link_label = product.metafields.product-video.link_label -%}
+{%- assign link_url = product.metafields.product-video.link_url -%}
+
+{%- assign video_url = product.metafields.product-video.video_url -%}
+{%- assign video = product.metafields.product-video.video -%}
+{%- assign video_muted = product.metafields.product-video.video_muted -%}
+{%- assign video_poster = product.metafields.product-video.video_poster -%}
+{%- assign video_poster_mobile = product.metafields.product-video.video_poster_mobile -%}
+
+
+{%- if show_section == 'true' -%}
+  {%- if video != blank or video_url != blank -%}
+    <section class="product-video wrapper">
+      {%- if heading != blank -%}
+        <h2 class="product-video__heading">
+          {{ heading }}
+        </h2>
+      {%- endif -%}
+
+      {% render 'embed-native-video', metafields: true, custom_class: 'product-video__video', video_url: video_url,
+        video: video[0], muted: video_muted, poster: video_poster[0], poster_mobile: video_poster_mobile[0] %}
+
+      {%- if link_label != blank and link_url != blank -%}
+        <a href="{{ link_url }}" class="product-video__link icon-arrow-animate type-arrow">
+          {{ link_label }}
+          {% render 'icon' with 'arrow-long-right' %}
+        </a>
+      {%- endif -%}
+    </section>
+  {%- endif -%}
+{%- endif -%}

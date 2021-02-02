@@ -1,0 +1,57 @@
+{%- unless metafields -%}
+  {%- if show_section -%}
+    {%- assign show_section = 'true' -%}
+  {%- endif -%}
+  {%- if enable_overlay -%}
+    {%- assign enable_overlay = 'true' -%}
+  {%- endif -%}
+{%- endunless -%}
+
+{%- if show_section == 'true' and bg_image != blank -%}
+  <section class="page-hero page-hero--{{ height }}" {% if section_id != blank %}id="{{ section_id }}"{% endif%} {% if order != blank %}style="order: {{ order }};"{% endif %}>
+
+    {%- if bg_image != blank -%}
+      {%- if metafields -%}
+        {% render 'picture-metafields', image_desk: bg_image, image_mobile: bg_image_mobile, class_name: 'page-hero__bg', image_attr: , %}
+      {% else %}
+        {% render 'picture', image_desk: bg_image, image_mobile: bg_image_mobile, class_name: 'page-hero__bg', image_attr: , %}
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if enable_overlay == 'true' -%}
+      <div class="image-overlay" style="background-color: {{ overlay_color }}; opacity: {{ overlay_opacity | times: 0.01 }}"></div>
+    {%- endif -%}
+
+    {%- if heading != blank or subheading != blank or text != blank -%}
+      <div class="page-hero__content wrapper align-{{ content_position | handleize }}"
+           style="color: {{ color }}; {% if content_width != blank %} max-width: {{ content_width | append: 'px' }}{% endif %}">
+
+        <div class="page-hero__content-inner">
+          {%- if heading != blank -%}
+            <h1 class="page-hero__heading">
+              {{ heading | newline_to_br }}
+            </h1>
+          {%- endif -%}
+
+          {%- if subheading != blank -%}
+            <h2 class="page-hero__subheading">
+              {{ subheading }}
+            </h2>
+          {%- endif -%}
+
+          {%- if text != blank -%}
+            <div class="page-hero__text" style="{% if text_width != blank %} max-width: {{ text_width | append: 'px' }}{% endif %}">
+              {{ text }}
+            </div>
+          {%- endif -%}
+
+          {%- if arrow_scroll_link != blank -%}
+            <a class="page-hero__scroll-link" href="{{ arrow_scroll_link }}" style="color: {{ color }};">
+              {% render 'icon' with 'dropdown' %}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </section>
+{%- endif -%}

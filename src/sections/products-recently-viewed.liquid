@@ -1,0 +1,68 @@
+<!-- /sections/products-recently-viewed.liquid -->
+{%- assign show_section = section.settings.show_section -%}
+{%- assign heading = section.settings.title -%}
+
+{%- if show_section -%}
+  <div class="recent__wrapper" id="RecentlyViewed" style="display:none">
+    {%- if heading != blank -%}
+      <h2 class="recent__content__heading">
+        Recently viewed
+      </h2>
+    {%- endif -%}
+
+    <div class="recent__content product-grid" id="recently-viewed-products"></div>
+  </div>
+
+  {% raw %}
+  <script id="recently-viewed-product-template" type="text/x-jquery-tmpl">
+      <a href="${url}" class="product-item-section">
+      <div class="product-item-section__image-wrapper">
+      <picture class="product-item-section__image">
+          <source data-srcset="${featured_image} 600w" />
+          <img class="lazyload"
+               data-sizes="auto"
+               data-src="${featured_image}"
+               data-parent-fit="contain"
+               alt="${title}"/>
+        </picture>
+      </div>
+
+        <h3 class="product-item-section__title">
+          ${title}
+        </h3>
+
+        <span class="product-item-section__price">
+          {{if available }}
+            {{if price_varies }}
+              $${(price_min / 100)} <span>{% endraw %}{{ 'collections.general.sale_product_label_up' | t }}</span>{% raw %}
+            {{else}}
+              $${(price / 100)}
+            {{/if}}
+          {{else}}
+            {% endraw %}{{ 'products.product.sold_out' | t }}{% raw %}
+          {{/if}}
+        </span>
+      </a>
+    </script>
+  {% endraw %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Recently viewed",
+  "settings": [
+    {
+      "id": "show_section",
+      "type": "checkbox",
+      "label": "Show section"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Recently viewed"
+    }
+  ]
+}
+
+{% endschema %}

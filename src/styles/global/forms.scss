@@ -1,0 +1,133 @@
+/*============================================================================
+  Form scaffolding
+    - Selectors setup for you to style form elements how you want
+    - Focus, error, and disabled states are set to be extended
+==============================================================================*/
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+select {
+  color: $color-form-field-text;
+  border: 1px solid $color-form-field-border;
+  background-color: $color-form-field-bg;
+  border-radius: 2px;
+  max-width: 100%;
+  padding: 18px 64px 17px 20px;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+
+  &::placeholder {
+    color: $color-form-field-ph-text;
+  }
+
+  &:focus {
+    // You should add some focus styles
+  }
+
+  &[disabled] {
+    cursor: default;
+    background-color: $color-form-field-bg-disabl;
+    border-color: $color-form-field-bg-disabl;
+  }
+
+  &.input-full {
+    width: 100%;
+  }
+}
+
+textarea {
+  min-height: 100px;
+}
+
+/*================ Custom select style ================*/
+select {
+  @include prefix(appearance, none, webkit moz spec);
+  background-position: right center;
+  background: {
+    image: url($svg-select-icon);
+    repeat: no-repeat;
+    position: right 10px center;
+    color: transparent;
+  }
+  padding-right: 28px;
+  text-indent: 0.01px;
+  text-overflow: '';
+  cursor: pointer;
+
+  /*================ Hide the svg arrow in IE9 ================*/
+  .ie9 & {
+    padding-right: 10px;
+    background-image: none;
+  }
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+/*================ Error styles ================*/
+input,
+select,
+textarea {
+  &.input-error {
+    border-color: $color-form-field-border-alert;
+    background-color: $color-form-field-bg;
+    color: $color-form-field-alert-text;
+  }
+}
+
+.custom-checkbox {
+  position: relative;
+  padding-left: 28px;
+  cursor: pointer;
+  font-size: 18px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 18px;
+    width: 18px;
+    background-color: $color-body;
+    border: 2px solid $color-icon;
+  }
+
+  input:checked ~ .checkmark {
+    background-color: $color-icon;
+  }
+
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  input:checked ~ .checkmark:after {
+    display: block;
+  }
+
+  .checkmark:after {
+    left: 4px;
+    top: -1px;
+    width: 7px;
+    height: 13px;
+    border: solid $color-body;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+}

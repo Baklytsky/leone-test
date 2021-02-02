@@ -1,0 +1,18 @@
+{% comment %}
+  <button class="global-sidebar-button" aria-controls="{{ id }}"></button>
+{% render 'global-sidebar', id: block.id, left_or_right: 'right', class_name: '', heading: sidebar_heading, content: content, icon_name: 'close' %}
+{% endcomment %}
+
+
+<aside class="global-sidebar right cart-sidebar" id="cart-sidebar" aria-hidden="true" data-section-type="cart" data-template="{{ template }}">
+  <div class="cart-loader" id="top">
+    <div class="cart-loader-inner"></div>
+  </div>
+
+  <div class="global-sidebar__header">
+    <button class="close"><span class="sr-only">close</span>{% render 'icon' with 'close' %}</button>
+  </div>
+  <div class="global-sidebar__wrapper">
+    <div class="global-sidebar__container" id="cart-sidebar-content"></div>
+  </div>
+</aside>

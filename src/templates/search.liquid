@@ -1,0 +1,111 @@
+<div class="wrapper search-page">
+  {% paginate search.results by 10 %}
+
+    <div class="search-page__header">
+      {% if search.performed %}
+        {% if search.results_count == 0 %}
+          <h1 class="search-page-no-result">
+            {{ 'general.search.no_results_html' | t: terms: search.terms }}
+          </h1>
+        {% else %}
+          <h1 class="search-page-html">
+            {{ 'general.search.results_for_html' | t: terms: search.terms }}
+          </h1>
+        {% endif %}
+      {% else %}
+        <h1 class="search-page-title">
+          {{ 'general.search.title' | t }}
+        </h1>
+      {% endif %}
+
+      <form action="/search" method="get" role="search">
+        <label for="Search" class="label-hidden">
+          {{ 'general.search.placeholder' | t }}
+        </label>
+        <input type="search"
+               name="q"
+               id="Search"
+               value="{{ search.terms | escape }}"
+               placeholder="{{ 'general.search.placeholder' | t }}">
+        <button type="submit" class="btn btn--secondary">
+          {% render 'icon' with 'search' %}
+          <span class="icon-fallback-text">{{ 'general.search.submit' | t }}</span>
+        </button>
+      </form>
+    </div>
+
+    {% if search.performed %}
+      <div class="search-page__list">
+        {% for item in search.results %}
+          <div  class="search-page__item">
+            {% if item.content contains "<img" %}
+              {% assign src = item.content | split: 'src="' %}
+              {% assign src = src[1] | split: '"' | first | replace: '//cdn', 'http://cdn';; | replace: 'http:http://';;, 'http://';; | remove: 'https:' %}
+            {% endif %}
+            {% assign featured_image = item.image | default: item.featured_image %}
+
+            {% if featured_image != blank or src != blank %}
+              <a href="{{ item.url | within: collection }}" title="{{ item.title | escape }}" class="search-item__image">
+                {%- if item.object_type == 'page' -%}
+                  <picture class="{{ class_name }}">
+                    <source data-srcset="{{ src }} 360w" media="(max-width: 360px)" />
+                    <source data-srcset="{{ src }} 540w" media="(max-width: 540px)" />
+                    <source data-srcset="{{ src }} 720w" media="(max-width: 767px)" />
+                    <source data-srcset="{{ src }} 900w" media="(max-width: 900px)" />
+                    <source data-srcset="{{ src }} 1080w" media="(max-width: 1080px)" />
+                    <source data-srcset="{{ src }} 1296w" media="(max-width: 1296px)" />
+                    <source data-srcset="{{ src }} 1512w" media="(max-width: 1512px)" />
+                    <source data-srcset="{{ src }} 1728w" />
+                    <img class="lazyload"
+                         data-sizes="auto"
+                         data-src="{{ src }}"
+                         data-parent-fit="contain"
+                         alt="{{ item.title }}"/>
+                  </picture>
+                {% else %}
+                  {% render 'picture', image_desk: featured_image, image_mobile: , class_name: , image_attr: , %}
+                {% endif %}
+              </a>
+            {% endif %}
+
+            <h3 class="search-page__item-title">
+              {{ item.title | link_to: item.url }}
+            </h3>
+
+            {% if item.object_type == 'product' %}
+                <a href="{{ item.url }}" class="btn btn--primary">
+                {%- if item.available -%}
+                  {% if item.price_varies %}
+                    {% if item.compare_at_price_max > item.price %}
+                      <span>{{ 'collections.general.sale_product_label' | t }} | </span> {{ item.price_min | money_without_trailing_zeros }} <span>{{ 'collections.general.sale_product_label_up' | t }}</span>
+                    {% else %}
+                      <span>{{ 'collections.general.default_product_label' | t }} | </span> {{ item.price_min | money_without_trailing_zeros }} <span>{{ 'collections.general.sale_product_label_up' | t }}</span>
+                    {% endif %}
+                  {% else %}
+                    {% if item.compare_at_price_max > item.price %}
+                      <span>{{ 'collections.general.sale_product_label' | t }} | </span> {{ item.price | money_without_trailing_zeros }}
+                    {% else %}
+                      <span>{{ 'collections.general.default_product_label' | t }} | </span> {{ item.price | money_without_trailing_zeros }}
+                    {% endif %}
+                  {% endif %}
+                {% else %}
+                  <span>
+                    {{ 'products.product.sold_out' | t }}
+                  </span>
+                {%- endif -%}
+              </a>
+            {% elsif item.content != blank %}
+              <p class="search-page__item-text">{{ item.content | strip_html | truncatewords: 50 }}</p>
+            {% endif %}
+
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if paginate.pages > 1 %}
+        {% include 'pagination' %}
+      {% endif %}
+    {% endif %}
+
+  {% endpaginate %}
+</div>

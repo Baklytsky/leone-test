@@ -1,0 +1,19 @@
+{% if paginate.pages > 1 %}
+<div class="pagination small--hide">
+  {{ paginate | default_pagination }}
+</div>
+{% endif %}
+
+{% if paginate.pages > 1 %}
+  <div class="pagination medium-up--hide">
+    {% if paginate.previous %}
+      <span class="prev">{{ '&larr;' | link_to: paginate.previous.url }}</span>
+    {% endif %}
+
+    <span class="page current">{{ paginate.current_page }}</span>
+
+    {% if paginate.next %}
+      <span class="next">{{ '&rarr;' | link_to: paginate.next.url }}</span>
+    {% endif %}
+  </div>
+{% endif %}

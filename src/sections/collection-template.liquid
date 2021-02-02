@@ -1,0 +1,42 @@
+{%- assign collection_title = collection.title -%}
+
+{% paginate collection.products by section.settings.grid_items_per_page %}
+
+  <div class="wrapper">
+    <h2 class="collection__title medium-up--hide">{{ collection_title }}</h2>
+    <div class="collection__product-list">
+      {% for product in collection.products %}
+        <div class="collection__product-item">
+          {% render 'product-item', product: product %}
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+      {% include 'pagination' %}
+    {% endif %}
+  </div>
+
+{% endpaginate %}
+
+{% schema %}
+{
+  "name": "Collection",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "grid_items_per_page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "default": 12
+    }
+  ]
+}
+
+{% endschema %}

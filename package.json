@@ -1,0 +1,15 @@
+{
+  "name": "juvia-s-place",
+  "version": "0.0.1",
+  "scripts": {
+    "config:deploy": "theme deploy config/settings_data.json config/settings_schema.json --dir=src --no-ignore",
+    "config:download": "theme download config/settings_data.json config/settings_schema.json --dir=src --no-ignore",
+    "theme:deploy": "slate deploy",
+    "theme:download": "shopify-themekit download --dir=src",
+    "start": "slate start",
+    "watch": "slate watch"
+  },
+  "devDependencies": {
+    "@shopify/slate-tools": "0.14.0"
+  }
+}

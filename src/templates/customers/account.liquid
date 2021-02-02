@@ -1,0 +1,352 @@
+{%- assign image = settings.account_image -%}
+
+<div class="account-page">
+
+  {%- if image != blank -%}
+    {% render 'picture', image_desk: image, class_name: 'account-page__image medium-down--hide', image_attr: , %}
+  {%- endif -%}
+
+  <div class="account-page__content">
+    <div class="account-page__content-inner">
+      <div class="account-page__header">
+        <div class="account-page__header-left">
+          {%- if customer.first_name != blank -%}
+            <h1>{{ 'customer.account.title' | t }} {{ customer.first_name }}</h1>
+          {%- endif -%}
+
+          {%- if customer.email != blank -%}
+            <h2>
+              {{ customer.email }}
+            </h2>
+          {%- endif -%}
+        </div>
+        <div class="account-page__header-right small--hide">
+          <button class="global-sidebar-button icon-arrow-animate type-arrow" aria-controls="sidebar-customer-info">
+            {{ 'customer.account.update' | t }}
+            {% render 'icon' with 'arrow-long-right' %}
+          </button>
+
+          {% capture content_update_customer_info %}
+            <div data-section-type="customer-info">
+              <form id="update-customer-info" class="customer-info">
+                <h1>{{ 'customer.information.title' | t }}</h1>
+                <h2>{{ 'customer.information.subtitle' | t }}</h2>
+
+                <input type="hidden" name="customer[id]" value="{{ customer.id }}" />
+
+                <div class="form-wrap">
+                  <label class="visually-hidden" for="first_name">{{ 'customer.information.first_name' | t }}</label>
+                  <input type="text" value="{%- if customer.first_name != blank -%}{{ customer.first_name }}{% endif %}" name="customer[first_name]" id="first_name"
+                         required size="30" placeholder="{{ 'customer.information.first_name' | t }}"/>
+                </div>
+
+                <div class="form-wrap">
+                  <label class="visually-hidden" for="last_name">{{ 'customer.information.last_name' | t }}</label>
+                  <input type="text" value="{%- if customer.last_name != blank -%}{{ customer.last_name }}{% endif %}" name="customer[last_name]" id="last_name"
+                         required placeholder="{{ 'customer.information.last_name' | t }}"/>
+                </div>
+
+                <div class="form-wrap">
+                  <label class="visually-hidden" for="email">{{ 'customer.information.email' | t }}</label>
+                  <input type="email" value="{%- if customer.email != blank -%}{{ customer.email }}{% endif %}" name="customer[email]" id="email"
+                         required
+                         placeholder="{{ 'customer.information.email' | t }}"/>
+                </div>
+
+                <button type="submit" disabled class="btn btn--full btn--primary">
+                  {{ 'customer.information.update' | t }}
+                </button>
+              </form>
+            </div>
+
+          {% endcapture %}
+
+          {% render 'global-sidebar', id: 'sidebar-customer-info', left_or_right: 'right', class_name: , heading: , content: content_update_customer_info, icon_name: 'close' %}
+        </div>
+      </div>
+
+
+      <div class="tabs">
+
+        <div class="tab">
+          <button class="ariaToggleSlide" aria-expanded="true" aria-controls="customer-info-address">
+            {{ 'customer.addresses.title' | t }}
+            {% render 'icon' with 'dropdown' %}
+          </button>
+
+          <div class="tab-text" id="customer-info-address">
+            {%- if customer.addresses != blank -%}
+
+              {% render 'addresses', customer: customer %}
+
+            {% else %}
+              <div class="customer-add-address__wrapper">
+                <p>{{ 'customer.addresses.add_for_faster_checkout' | t }}</p>
+
+                <button class="global-sidebar-button" aria-controls="customer-add-address">
+                  {{ 'customer.addresses.add_new' | t }}
+                  {% render 'icon' with 'arrow-long-right' %}
+                </button>
+              </div>
+            {%- endif -%}
+
+            {% capture add_new_address %}
+              <div id="AddressNewForm" class="account-sidebar-address">
+                {% form 'customer_address', customer.new_address %}
+                  <div class="account-sidebar-address__header">
+                    <h2 class="account-sidebar-address__heading">{{ 'customer.addresses.add_new_title' | t }}</h2>
+                    <h3 class="account-sidebar-address__subheading">{{ 'customer.addresses.add_new_subtitle' | t }}</h3>
+                  </div>
+
+                  <div class="form-wrap">
+                    <label for="AddressFirstNameNew" class="visually-hidden"class="visually-hidden">{{ 'customer.addresses.first_name' | t }}</label>
+                    <input placeholder="{{ 'customer.addresses.first_name' | t }}"
+                           required
+                           type="text" name="address[first_name]" id="AddressFirstNameNew"
+                           value="{{ form.first_name }}" autocapitalize="words">
+                  </div>
+                  <div class="form-wrap">
+                    <label for="AddressLastNameNew" class="visually-hidden">{{ 'customer.addresses.last_name' | t }}</label>
+                    <input placeholder="{{ 'customer.addresses.last_name' | t }}"
+                           required
+                           type="text" name="address[last_name]" id="AddressLastNameNew"
+                           value="{{ form.last_name }}" autocapitalize="words">
+                  </div>
+                  <div class="form-wrap">
+                    <label for="AddressCompanyNew" class="visually-hidden">{{ 'customer.addresses.company' | t }}</label>
+                    <input placeholder="{{ 'customer.addresses.company' | t }}" type="text"
+                           name="address[company]" id="AddressCompanyNew"
+                           value="{{ form.company }}" autocapitalize="words">
+                  </div>
+
+                  <div class="form-wrap">
+                    <label for="AddressAddress1New" class="visually-hidden">{{ 'customer.addresses.address1' | t }}</label>
+                    <input placeholder="{{ 'customer.addresses.address1' | t }}" type="text"
+                           required
+                           name="address[address1]" id="AddressAddress1New"
+                           value="{{ form.address1 }}" autocapitalize="words">
+                  </div>
+
+                  <div class="form-wrap">
+                    <label for="AddressAddress2New" class="visually-hidden">{{ 'customer.addresses.address2' | t }}</label>
+                    <input placeholder="{{ 'customer.addresses.address2' | t }}" type="text"
+                           name="address[address2]" id="AddressAddress2New"
+                           value="{{ form.address2 }}" autocapitalize="words">
+                  </div>
+
+                  <div class="form-wrap">
+                    <label for="AddressZipNew" class="visually-hidden">{{ 'customer.addresses.zip' | t }}</label>
+                    <input placeholder="{{ 'customer.addresses.zip' | t }}" type="text"
+                           required
+                           name="address[zip]" id="AddressZipNew" value="{{ form.zip }}"
+                           autocapitalize="characters">
+                  </div>
+
+                  <div class="form-wrap">
+                    <label for="AddressCityNew" class="visually-hidden">{{ 'customer.addresses.city' | t }}</label>
+                    <input placeholder="{{ 'customer.addresses.city' | t }}" type="text"
+                           required
+                           name="address[city]" id="AddressCityNew" value="{{ form.city }}"
+                           autocapitalize="words">
+                  </div>
+
+                  <div class="form-wrap">
+                    <label for="AddressCountryNew" class="visually-hidden">{{ 'customer.addresses.country' | t }}</label>
+                    <select required="required" aria-required="true" name="address[country]" id="AddressCountryNew"
+                            data-default="United States">{{ country_option_tags }}</select>
+                  </div>
+
+                  <div class="form-wrap">
+                    <div id="AddressProvinceContainerNew" style="display: none">
+                      <label for="AddressProvinceNew" class="visually-hidden">{{ 'customer.addresses.province' | t }}</label>
+                      <select name="address[province]" id="AddressProvinceNew"
+                              data-default="{{ form.province }}"></select>
+                    </div>
+                  </div>
+
+                  <div class="form-wrap">
+                    <label for="AddressPhoneNew" class="visually-hidden">{{ 'customer.addresses.phone' | t }}</label>
+                    <input placeholder="{{ 'customer.addresses.phone' | t }}" type="tel"
+                           name="address[phone]" id="AddressPhoneNew"
+                           value="{{ form.phone }}">
+                  </div>
+
+                  <div class="form-wrap__checkbox">
+                    <label class="custom-checkbox" for="address_default_address_new">
+                      {{ form.set_as_default_checkbox }}
+                      {{ 'customer.addresses.set_default' | t }}
+                      <span class="checkmark"></span>
+                    </label>
+                  </div>
+                  <button id="AddressNewFormButton" type="submit" class="btn btn--primary btn--full">
+                    {{ 'customer.addresses.add' | t }}
+                  </button>
+                {% endform %}
+              </div>
+            {% endcapture %}
+
+            {% render 'global-sidebar', id: 'customer-add-address', left_or_right: 'right', class_name: , heading: , content: add_new_address, icon_name: 'close' %}
+          </div>
+        </div>
+
+        <div class="tab">
+          <button class="ariaToggleSlide" aria-expanded="true" aria-controls="customer-info-orders">
+            {{ 'customer.orders.title' | t }}
+            {% render 'icon' with 'dropdown' %}
+          </button>
+          <div class="tab-text" id="customer-info-orders">
+            {%- if  customer.orders != blank -%}
+              {%- for order in customer.orders -%}
+                {%- assign order_id = order.name | remove: "#" -%}
+
+                <div class="account-orders-item">
+                  <div class="account-orders-item__left">
+                    <p class="account-orders-item__date">
+                      {{ order.created_at | date: '%B %d' }}
+                    </p>
+                    <button class="global-sidebar-button account-orders-item__name" aria-controls="{{ order_id }}">
+                      {{ order.name }}
+                    </button>
+                  </div>
+
+                  <div class="account-orders-item__right">
+                    {{ order.total_price | money_without_trailing_zeros }}
+                  </div>
+
+                  {% capture order_info %}
+                    <div class="account-order">
+                      <h2 class="account-order__main-heading">
+                        Ordered:
+                        <span>{{ order.created_at | date: '%B %d' }}</span>
+                      </h2>
+
+                      {% if order.cancelled %}
+                        {%- assign cancelled_at = order.cancelled_at | date: "%B %d, %Y %I:%M%p" -%}
+
+                        <div class="account-order__cancelled">
+                          <p>{{ 'customer.order.cancelled' | t: date: cancelled_at }}</p>
+                          <p>{{ 'customer.order.cancelled_reason' | t: reason: order.cancel_reason }}</p>
+                        </div>
+                      {% endif %}
+
+                      <h3 class="account-order__main-subheading">
+                        Order {{ order.name }} - {{ order.fulfillment_status | capitalize }}
+                      </h3>
+
+                      <div class="account-order__block">
+                        <h3 class="account-order__heading">Items</h3>
+
+                        {%- for line_item in order.line_items -%}
+                          <div class="account-order__product">
+                            <h4>
+                              {{ line_item.product.title | link_to: line_item.product.url }}
+
+                              {%- if line_item.variant.title == blank -%}
+                                <span>
+                                <a href="">Rich Neutral #2345</a>
+                                {{ line_item.variant.title | link_to: line_item.variant.url  }}
+                              </span>
+                              {%- endif -%}
+                            </h4>
+
+                            <span class="account-order__product-price">
+                            {{ line_item.final_line_price | money_without_trailing_zeros }}
+                          </span>
+                          </div>
+                        {%- endfor -%}
+                      </div>
+
+                      <div class="account-order__block">
+                        <h3 class="account-order__heading">Shipping</h3>
+
+                        <h4 class="account-order__shipping-name">
+                          {{ order.shipping_address.name }}
+                        </h4>
+                        {%- if order.shipping_address.company != blank -%}
+                          <p>{{ order.shipping_address.company }}</p>
+                        {%- endif -%}
+                        {%- if order.shipping_address.street != blank -%}
+                          <p>{{ order.shipping_address.street }}</p>
+                        {%- endif -%}
+                        <p>{{ order.shipping_address.city }}, {{ order.shipping_address.province_code }} {{ order.shipping_address.zip }}</p>
+                        <p>{{ order.shipping_address.country }}</p>
+                        {%- if order.shipping_address.phone != blank -%}
+                          <p>{{ order.shipping_address.phone }}</p>
+                        {%- endif -%}
+                      </div>
+
+                      {%- if order.transactions == blank -%}
+                        <div class="account-order__block">
+                          <h3 class="account-order__heading account-order__payment-status">
+                            {{ 'customer.order.payment_status' | t }}
+                            <span>
+                            {{ order.financial_status_label }}
+                          </span>
+                          </h3>
+
+                          <h4 class="account-order__payment-method">
+
+                            American Express
+                            <span>
+                                 •••• •••• •••• 2001
+                                </span>
+                          </h4>
+                          {% comment %}
+                            {%- for transaction in order.transactions -%}
+                              <h4 class="account-order__payment-method">
+                                {%- if transaction.payment_details.credit_card_company != blank -%}
+                                  <span>
+                                  {{ transaction.payment_details.credit_card_company }}
+                                </span>
+                                {%- endif -%}
+                                {%- if transaction.payment_details.credit_card_number != blank -%}
+                                  <span>
+                                  {{ transaction.payment_details.credit_card_number }}
+                                </span>
+                                {%- endif -%}
+                              </h4>
+                            {%- endfor -%}
+                          {% endcomment %}
+
+                        </div>
+                      {%- endif -%}
+
+                      <div class="account-order__block account-order__block-total">
+                        <h5>
+                          Subtotal <span>{{ order.subtotal_price | money_without_trailing_zeros }}</span>
+                        </h5>
+
+                        <h5>
+                          Shipping <span>{% if order.shipping_price != 0 %} {{ order.shipping_price | money_without_trailing_zeros }} {% else %} Free {% endif %}</span>
+                        </h5>
+
+                        <h5>
+                          Tax <span>{{ order.tax_price | money_without_trailing_zeros }}</span>
+                        </h5>
+
+                        <h5>
+                          Total <span>{{ order.total_price | money_without_trailing_zeros }}</span>
+                        </h5>
+                      </div>
+
+                      <a href="/a/returns?order={{order.order_number}}" class="account-order__return btn btn--secondary btn--full"> Request a return </a>
+                    </div>
+                  {% endcapture %}
+
+                  {% render 'global-sidebar', id: order_id, left_or_right: 'right', class_name: '', heading: , content: order_info, icon_name: 'close' %}
+                </div>
+              {%- endfor -%}
+            {% else %}
+              <p>
+                You have no orders
+              </p>
+            {%- endif -%}
+          </div>
+        </div>
+
+      </div>
+
+      <a href="/account/logout" class="account-page__logout btn btn--secondary btn--full">{{ 'layout.customer.log_out' | t }}</a>
+    </div>
+  </div>
+</div>
